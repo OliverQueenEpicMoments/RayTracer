@@ -27,9 +27,6 @@ int main(int, char**) {
 
 		// Render Scene
 		canvas.Clear({ 0, 0, 0, 0 });
-		/*for (int I = 0; I < 1000; I++) {
-			canvas.DrawPoint({ Random(0, 600), Random(0, 400) }, { 1, 1, 1, 1 });
-		}*/
 		renderer.Render(canvas);
 		canvas.Update();
 
