@@ -13,8 +13,8 @@ public:
     void Update();
     void Draw(const Renderer& renderer);
 
-    void Clear(const glm::vec4& color);
-    void DrawPoint(const glm::ivec2& point, const glm::vec4& color);
+    void Clear(const color4& color);
+    void DrawPoint(const glm::ivec2& point, const color4& color);
 
     inline int GetWidth() const { return m_width; }
     inline int GetHeight() const { return m_height; }
