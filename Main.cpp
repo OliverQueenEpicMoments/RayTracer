@@ -9,6 +9,7 @@ int main(int, char**) {
 	renderer.CreateWindow(800, 400);
 
 	Canvas canvas(800, 400, renderer);
+	Camera camera({ 0, 1, 2 }, { 0, 0, 0 }, { 0, 1, 0 }, 90.0f, 600 / (float)300);
 	Scene scene;
 
 	scene.AddObject(std::make_unique<Sphere>(glm::vec3{ 0, 0, -1 }, 0.5f, std::make_unique<Lambertian>(color3{ 1, 0, 0 })));
@@ -27,7 +28,6 @@ int main(int, char**) {
 			switch (event.key.keysym.sym) {
 			case SDLK_ESCAPE:
 				Quit = true;
-				
 				break;
 			}
 			break;
@@ -35,7 +35,7 @@ int main(int, char**) {
 
 		// Render Scene
 		canvas.Clear({ 0, 0, 0, 0 });
-		renderer.Render(canvas, scene);
+		renderer.Render(canvas, scene, camera);
 		canvas.Update();
 
 		renderer.CopyCanvas(canvas);

@@ -1,5 +1,6 @@
 #pragma once
 #include "Canvas.h"
+#include "Camera.h"
 #include "../Math/Ray.h"
 #include "../Objects/Object.h"
 #include <SDL.h>
@@ -11,7 +12,7 @@ class Renderer {
 public:
 	Renderer() = default;
 
-	void Render(Canvas& canvas, Scene& scene);
+	void Render(Canvas& canvas, Scene& scene, Camera& camera);
 	
 	bool Initialize();
 	void Shutdown();

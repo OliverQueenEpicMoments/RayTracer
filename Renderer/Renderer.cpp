@@ -2,7 +2,7 @@
 #include "../Objects/Scene.h"
 #include <iostream>
 
-void Renderer::Render(Canvas& canvas, Scene& scene) {
+void Renderer::Render(Canvas& canvas, Scene& scene, Camera& camera) {
     // Camera / Viewport
     glm::vec3 LowerLeft{ -2, -1, -1 };
     glm::vec3 Eye{ 0, 0, 0 };
@@ -11,17 +11,18 @@ void Renderer::Render(Canvas& canvas, Scene& scene) {
 
     for (int Y = 0; Y < canvas.GetHeight(); Y++) {
         for (int X = 0; X < canvas.GetWidth(); X++) {
-            // Get normalized U, V coordinates for X and Y
-            float U = X / (float)canvas.GetWidth();
-            float V = 1 - (Y / (float)canvas.GetHeight());
+            // Get normalized U, V coordinates from screen X and Y
+            glm::vec2 Point = glm::vec2{ X, Y } / glm::vec2{ canvas.m_width, canvas.m_height };
 
-            // Create ray
-            glm::vec3 Direction = LowerLeft + (U * Right) + (V * Up);
-            Ray ray{ Eye, Direction };
+            // Flip Y
+            Point.y = 1.0f - Point.y;
 
+            // Create ray from camera
+            Ray ray = camera.PointToRay(Point);
+
+            // Cast ray into scene, get color 
             RaycastHit raycasthit;
-
-            color3 Color = scene.Trace(ray, 0.01f, 1000.0f, raycasthit, 5);
+            color3 Color = scene.Trace(ray, 0.001f, 1000.0f, raycasthit, 5);
             canvas.DrawPoint({ X, Y }, color4(Color, 1));
         }
     }
