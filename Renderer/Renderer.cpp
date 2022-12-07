@@ -2,27 +2,29 @@
 #include "../Objects/Scene.h"
 #include <iostream>
 
-void Renderer::Render(Canvas& canvas, Scene& scene, Camera& camera) {
-    // Camera / Viewport
-    glm::vec3 LowerLeft{ -2, -1, -1 };
-    glm::vec3 Eye{ 0, 0, 0 };
-    glm::vec3 Right{ 4, 0, 0 };
-    glm::vec3 Up{ 0, 2, 0 };
+void Renderer::Render(Canvas& canvas, Scene& scene, Camera& camera, int samples) {
+    for (int Y = 0; Y < canvas.m_height; Y++) {
+        for (int X = 0; X < canvas.m_width; X++) {
+            color3 Color{ 0, 0, 0 };
+            for (int S = 0; S < samples; S++) {
+                // Get normalized U, V coordinates from screen X and Y
+                // Add random value to screen X and Y for anti-aliasing
+                glm::vec2 Point = glm::vec2{ Random01() + X, Random01() + Y } / glm::vec2{ canvas.m_width, canvas.m_height };
 
-    for (int Y = 0; Y < canvas.GetHeight(); Y++) {
-        for (int X = 0; X < canvas.GetWidth(); X++) {
-            // Get normalized U, V coordinates from screen X and Y
-            glm::vec2 Point = glm::vec2{ X, Y } / glm::vec2{ canvas.m_width, canvas.m_height };
+                // Flip Y
+                Point.y = 1.0f - Point.y;
 
-            // Flip Y
-            Point.y = 1.0f - Point.y;
+                // Create ray from camera
+                Ray ray = camera.PointToRay(Point);
 
-            // Create ray from camera
-            Ray ray = camera.PointToRay(Point);
+                // Cast ray into scene, get color 
+                RaycastHit raycasthit;
 
-            // Cast ray into scene, get color 
-            RaycastHit raycasthit;
-            color3 Color = scene.Trace(ray, 0.001f, 1000.0f, raycasthit, 5);
+                // Add trace color value to color
+                Color += scene.Trace(ray, 0.001f, 1000.0f, raycasthit, 5);
+            }
+            //Color = (color3)((Color.r + Color.g + Color.b) / 3);
+            //color3 Color = scene.Trace(ray, 0.001f, 1000.0f, raycasthit, 5);
             canvas.DrawPoint({ X, Y }, color4(Color, 1));
         }
     }
