@@ -1,8 +1,9 @@
 #include "Renderer.h"
+#include "../Objects/Scene.h"
 #include <iostream>
 
-void Renderer::Render(Canvas& canvas) {
-    // Camera /Viewport
+void Renderer::Render(Canvas& canvas, Scene& scene) {
+    // Camera / Viewport
     glm::vec3 LowerLeft{ -2, -1, -1 };
     glm::vec3 Eye{ 0, 0, 0 };
     glm::vec3 Right{ 4, 0, 0 };
@@ -18,8 +19,9 @@ void Renderer::Render(Canvas& canvas) {
             glm::vec3 Direction = LowerLeft + (U * Right) + (V * Up);
             Ray ray{ Eye, Direction };
 
-            // Get gradient background color from ray
-            color3 Color = GetBackgroundFromRay(ray);
+            RaycastHit raycasthit;
+
+            color3 Color = scene.Trace(ray, 0.01f, 1000.0f, raycasthit, 5);
             canvas.DrawPoint({ X, Y }, color4(Color, 1));
         }
     }
@@ -69,5 +71,5 @@ color3 Renderer::GetBackgroundFromRay(const Ray& ray) {
     glm::vec3 Direction = glm::normalize(ray.Direction);
     float T = 0.5f * (Direction.y + 1.0f);
 
-    return Interp(color3{ 1.0f }, color3{ 0.5f, 0.7f, 1.0f }, T);
+    return Lerp(color3{ 1.0f }, color3{ 0.5f, 0.7f, 1.0f }, T);
 }

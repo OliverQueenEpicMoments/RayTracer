@@ -1,13 +1,17 @@
 #pragma once
 #include "Canvas.h"
-#include <SDL.h>
 #include "../Math/Ray.h"
+#include "../Objects/Object.h"
+#include <SDL.h>
+
+class Object;
+class Scene;
 
 class Renderer {
 public:
 	Renderer() = default;
 
-	void Render(Canvas& canvas);
+	void Render(Canvas& canvas, Scene& scene);
 	
 	bool Initialize();
 	void Shutdown();

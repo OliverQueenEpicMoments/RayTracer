@@ -1,12 +1,19 @@
 #include "Renderer/Renderer.h"
+#include "Objects/Sphere.h"
+#include "Objects/Scene.h"
 #include <iostream>
 
 int main(int, char**) {
 	Renderer renderer;
 	renderer.Initialize();
-	renderer.CreateWindow(600, 400);
+	renderer.CreateWindow(800, 400);
 
-	Canvas canvas(600, 400, renderer);
+	Canvas canvas(800, 400, renderer);
+	Scene scene;
+
+	scene.AddObject(std::make_unique<Sphere>(glm::vec3{ 0, 0, -1 }, 0.5f, std::make_unique<Lambertian>(color3{ 1, 0, 0 })));
+	scene.AddObject(std::make_unique<Sphere>(glm::vec3{ -1, 0, -1 }, 0.25f, std::make_unique<Lambertian>(color3{ 0, 0, 1 })));
+	scene.AddObject(std::make_unique<Sphere>(glm::vec3{ 0, -100.5f, -1 }, 100.0f, std::make_unique<Lambertian>(color3{ 0.2f })));
 
 	bool Quit = false;
 	while (!Quit) {
@@ -20,6 +27,7 @@ int main(int, char**) {
 			switch (event.key.keysym.sym) {
 			case SDLK_ESCAPE:
 				Quit = true;
+				
 				break;
 			}
 			break;
@@ -27,7 +35,7 @@ int main(int, char**) {
 
 		// Render Scene
 		canvas.Clear({ 0, 0, 0, 0 });
-		renderer.Render(canvas);
+		renderer.Render(canvas, scene);
 		canvas.Update();
 
 		renderer.CopyCanvas(canvas);
