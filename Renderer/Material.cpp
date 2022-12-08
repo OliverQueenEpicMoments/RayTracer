@@ -9,3 +9,12 @@ bool Lambertian::Scatter(const Ray& ray, const RaycastHit& hit, color3& attenuat
 
     return true;
 }
+
+bool Metal::Scatter(const Ray& ray, const RaycastHit& hit, color3& attenuation, Ray& scattered) const {
+    glm::vec3 Reflected = Reflect(glm::normalize(ray.Direction), hit.Normal);
+
+    scattered = { hit.Point, Reflected + RandomInUnitSphere() * m_fuzz };
+    attenuation = m_albedo;
+
+    return Dot(hit.Normal, scattered.Direction) >= 0;
+}

@@ -28,3 +28,11 @@ inline glm::vec3 RandomInUnitSphere() {
 
     return Point;
 }
+
+inline float Dot(const glm::vec3& V1, const glm::vec3& V2) {
+    return V1.x * V2.x + V1.y * V2.y + V1.z * V2.z;
+}
+
+inline glm::vec3 Reflect(const glm::vec3& V, const glm::vec3& N) {
+    return V - (N * Dot(N, V)) * 2.0f;
+}
