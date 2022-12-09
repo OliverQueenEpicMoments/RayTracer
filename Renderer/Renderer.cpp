@@ -24,6 +24,7 @@ void Renderer::Render(Canvas& canvas, Scene& scene, Camera& camera, int samples)
                 Color += scene.Trace(ray, 0.001f, 1000.0f, raycasthit, 5);
             }
             //Color = (color3)((Color.r + Color.g + Color.b) / (float)3);
+            Color /= samples;
             //color3 Color = scene.Trace(ray, 0.001f, 1000.0f, raycasthit, 5);
             canvas.DrawPoint({ X, Y }, color4(Color, 1));
         }
